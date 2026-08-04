@@ -16,11 +16,9 @@ class ControllerPage extends State<Controller> {
   Timer? _timer;
 
   void _startTimer(){
-    /*
     _timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
       send_steering();
     });
-    */
   }
 
   void send_steering(){
@@ -50,7 +48,7 @@ class ControllerPage extends State<Controller> {
   @override
   void initState(){
     super.initState();
-    //_startTimer();
+    _startTimer();
 
     //始まったときの処理
   }

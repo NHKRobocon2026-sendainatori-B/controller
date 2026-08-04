@@ -31,19 +31,17 @@ class ControllerPage extends State<Controller> {
 
     Map<String, dynamic> data = {
       "op" : "publish",
-      "topic" : "/cmd_vel",
-      "type" : "geometry_msgs/Twist",
+      "topic" : "/steer_flutter",
+      "type" : "sensor_msgs/msg/Joy",
       "msg" : {
-        "linear" : {
-          "x": gmManager.Lstick_X,
-          "y": gmManager.Lstick_Y,
-          "z": 0,
-        },
-        "angular": {
-          "x": 0,
-          "y": 0,
-          "z": gmManager.Rstick_X,
-        }
+        "header": {},
+        "axes": [
+          gmManager.Lstick_X, // axes[0]
+          gmManager.Lstick_Y, // axes[1]
+          gmManager.Rstick_X, // axes[2]
+          gmManager.Rstick_Y  // axes[3]
+        ],
+        "buttons": []
       }
     };
     wsManager.send(data);

@@ -24,6 +24,10 @@ class Gamepadmanager with ChangeNotifier {
   bool get X => _X;
   bool _Y = false;
   bool get Y => _Y;
+  bool _LeftBumper = false;
+  bool get LeftBumper => LeftBumper;
+  bool _RightBumper = false;
+  bool get RightBumper => _RightBumper;
 
   bool _isConnected = false;
   bool get isConnected => _isConnected;
@@ -71,6 +75,18 @@ class Gamepadmanager with ChangeNotifier {
                 _Y = true;
               } else {
                 _Y = false;
+              }
+            } else if (n.button == GamepadButton.leftBumper){
+              if (n.value > 0.5){
+                _LeftBumper = true;
+              } else {
+                _LeftBumper = false;
+              }
+            } else if (n.button == GamepadButton.rightBumper){
+              if (n.value > 0.5){
+                _RightBumper = true;
+              } else {
+                _RightBumper = false;
               }
             }
           } else if (n.axis != null) {

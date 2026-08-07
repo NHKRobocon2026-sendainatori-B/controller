@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:nativewrappers/_internal/vm/bin/common_patch.dart';
 import 'package:flutter/material.dart';
+import 'package:gamepads/gamepads.dart';
 import 'package:provider/provider.dart';
 import 'websocketmanager.dart';
 import 'gamepadmanager.dart';
@@ -14,6 +16,20 @@ class Controller extends StatefulWidget {
 
 class ControllerPage extends State<Controller> {
   Timer? _timer;
+
+  bool shooter = false;
+  bool shooterProblem = false;
+  bool loaderProblem = false;
+  bool auto = false;
+  bool autoProblem = false;
+
+  //service通信用フラッグ
+  bool _wasBPressed = false;
+  bool _isShooting = false;
+  bool _wasAPressed = false;
+  bool _isLoading = false;
+  bool _wasYPressed = false;
+  bool _isAuto = false;
 
   void _startTimer(){
     _timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
@@ -45,6 +61,82 @@ class ControllerPage extends State<Controller> {
     wsManager.send(data);
   }
 
+  Future<void> _requestShooter() async {
+    final wsManager = context.read<Websocketmanager>();
+    if (!wsManager.isConnected) return;
+    if (_isShooting) return; // 通信中は重複送信しない
+    _isShooting = true;
+
+    final response = await wsManager.sendService(
+      service: "/shooter_service", 
+      type:'example_interfaces/srv/SetBool',
+      args: {"data" : shooter}
+    );
+
+    if (response['success'] == true){
+      setState(() {
+        shooter = !shooter; //ここで描画が変化される？まだ用意してないけど
+        shooterProblem = true;
+      });
+    } else {
+      setState(() {
+        shooterProblem = false;
+      });
+    }
+
+    _isShooting = false;
+  }
+
+  Future<void> _requestLoader() async {
+    final wsManager = context.read<Websocketmanager>();
+    if (!wsManager.isConnected) return;
+    if (_isLoading) return; // 通信中は重複送信しない
+    _isLoading = true;
+
+    final response = await wsManager.sendService(
+      service: 'loader_service', 
+      type: 'example_interfaces/srv/Trigger'
+    );
+
+    if (response['success'] == true) {
+      setState(() {
+        loaderProblem = false;
+      }); 
+    } else {
+      setState(() {
+        loaderProblem = true;
+      }); 
+    }
+
+    _isLoading = false;
+  }
+
+  Future<void> _requestAUTO() async {
+    final wsManager = context.read<Websocketmanager>();
+    if (!wsManager.isConnected) return;
+    if (_isAuto) return; // 通信中は重複送信しない
+    _isAuto = true;
+
+    final respose = await wsManager.sendService(
+      service: "/set_goal", 
+      type: "example_interfaces/srv/SetBool",
+      args: { "data" : !auto }
+    );
+
+    if (respose['success'] == true){
+      setState(() {
+        auto = !auto;
+        autoProblem = false;
+      });
+    } else {
+      setState(() {
+        autoProblem = true;
+      });
+    }
+
+    _isAuto = false;
+  }
+
   @override
   void initState(){
     super.initState();
@@ -54,12 +146,47 @@ class ControllerPage extends State<Controller> {
   }
 
   @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final gamepad = context.watch<Gamepadmanager>();
+    final bPressed = context.select<Gamepadmanager, bool>((m) => m.B);
+    final aPressed = context.select<Gamepadmanager, bool>((m) => m.A);
+    final yPressed = context.select<Gamepadmanager, bool>((m) => m.Y);
+
+    if (bPressed && !_wasBPressed) {
+      _wasBPressed = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _requestShooter();
+      });
+    } else if (!bPressed && _wasBPressed) {
+      _wasBPressed = false; // ボタンが離されたらリセット
+    }
+
+    if (aPressed && !_wasAPressed) {
+      _wasAPressed = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _requestLoader();
+      });
+    } else if (!aPressed && _wasAPressed) {
+      _wasAPressed = false; // ボタンが離されたらリセット
+    }
+
+    if (yPressed && !_wasYPressed) {
+      _wasYPressed = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _requestAUTO();
+      });
+    } else if (!yPressed && _wasYPressed) {
+      _wasYPressed = false; // ボタンが離されたらリセット
+    }
     
     return Scaffold(
       body: Center(
-        //なんかつけるか
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -68,6 +195,8 @@ class ControllerPage extends State<Controller> {
             Text("B:${gamepad.B}"),
             Text("X:${gamepad.X}"),
             Text("Y:${gamepad.Y}"),
+            Text("LB:${gamepad.LeftBumper}"),
+            Text("RB:${gamepad.RightBumper}"),
             Text("LS_X:${gamepad.Lstick_X.toStringAsFixed(2)}"),
             Text("LS_Y:${gamepad.Lstick_Y.toStringAsFixed(2)}"),
             Text("RS_X:${gamepad.Rstick_X.toStringAsFixed(2)}"),

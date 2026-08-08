@@ -8,6 +8,11 @@ class Websocketmanager {
   WebSocketChannel? channel;
   final Map<String, Completer<Map<String, dynamic>>> _pendingRequests = {};
   bool get isConnected => channel != null;
+  bool corner = false;
+
+  void setCorner(bool isRed) {
+    corner = isRed;
+  }
 
   void connect(String ipAddress) {
     if(channel != null) return;

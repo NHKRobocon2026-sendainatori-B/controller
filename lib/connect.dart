@@ -77,6 +77,7 @@ class ConnectionPagestate extends State<ConnectionPage> {
               onPressed: () async {
                 FocusScope.of(context).unfocus();
                 await Future.delayed(const Duration(milliseconds: 300));
+                wsManager.setCorner(corner);
                 wsManager.connect(textController.text);
                 if (context.mounted) {
                   widget.pageController.animateToPage(

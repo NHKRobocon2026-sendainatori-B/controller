@@ -22,6 +22,7 @@ class ControllerPage extends State<Controller> {
   bool loaderProblem = false;
   bool auto = false;
   bool autoProblem = false;
+  bool slow = false;
 
   //service通信用フラッグ
   bool _wasBPressed = false;
@@ -157,6 +158,7 @@ class ControllerPage extends State<Controller> {
     final bPressed = context.select<Gamepadmanager, bool>((m) => m.B);
     final aPressed = context.select<Gamepadmanager, bool>((m) => m.A);
     final yPressed = context.select<Gamepadmanager, bool>((m) => m.Y);
+    final isRedCorner = context.watch<Websocketmanager>().corner;
 
     if (bPressed && !_wasBPressed) {
       _wasBPressed = true;
@@ -190,17 +192,49 @@ class ControllerPage extends State<Controller> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Connected:${gamepad.isConnected}"),
-            Text("A:${gamepad.A}"),
-            Text("B:${gamepad.B}"),
-            Text("X:${gamepad.X}"),
-            Text("Y:${gamepad.Y}"),
-            Text("LB:${gamepad.LeftBumper}"),
-            Text("RB:${gamepad.RightBumper}"),
-            Text("LS_X:${gamepad.Lstick_X.toStringAsFixed(2)}"),
-            Text("LS_Y:${gamepad.Lstick_Y.toStringAsFixed(2)}"),
-            Text("RS_X:${gamepad.Rstick_X.toStringAsFixed(2)}"),
-            Text("RS_Y:${gamepad.Rstick_Y.toStringAsFixed(2)}"),
+            Container(
+              height: 30,
+              color: (isRedCorner) ? Colors.red : Colors.blue,
+              child: Text((isRedCorner) ? "赤コーナー" : "青コーナー"),
+            ),
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  //何らかのなんか,
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          text: "AUTO:  ",
+                          style: TextStyle(color: Colors.black, fontSize: 20),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: (auto) ? "ON" : "OFF",
+                              style: TextStyle(fontSize: 20, color: (auto) ? Colors.red : Colors.black)
+                            )
+                          ]
+                        )
+                      ),
+                      RichText(
+                        text: TextSpan(
+                          text: "SLOW:  ",
+                          style: TextStyle(color: Colors.black, fontSize: 20),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: (slow) ? "ON" : "OFF",
+                              style: TextStyle(fontSize: 20, color: (auto) ? Colors.red : Colors.black)
+                            )
+                          ]
+                        )
+                      ),
+                      
+                    ],
+                  )
+                ],
+              ),
+            )
           ],
         ),
       ),

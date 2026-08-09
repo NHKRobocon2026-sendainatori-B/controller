@@ -31,6 +31,7 @@ class ControllerPage extends State<Controller> {
   bool _isLoading = false;
   bool _wasYPressed = false;
   bool _isAuto = false;
+  bool _wasBumperPressed = false;
 
   void _startTimer(){
     _timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
@@ -51,10 +52,10 @@ class ControllerPage extends State<Controller> {
       "msg" : {
         "header": {},
         "axes": [
-          gmManager.Lstick_X, // axes[0]
-          gmManager.Lstick_Y, // axes[1]
-          gmManager.Rstick_X, // axes[2]
-          gmManager.Rstick_Y  // axes[3]
+          (slow) ? gmManager.Lstick_X / 3 : gmManager.Lstick_X, // axes[0]
+          (slow) ? gmManager.Lstick_Y / 3 : gmManager.Lstick_Y, // axes[1]
+          (slow) ? gmManager.Rstick_X / 3 : gmManager.Rstick_X, // axes[2]
+          (slow) ? gmManager.Rstick_Y / 3 : gmManager.Rstick_Y  // axes[3]
         ],
         "buttons": []
       }
@@ -158,6 +159,8 @@ class ControllerPage extends State<Controller> {
     final bPressed = context.select<Gamepadmanager, bool>((m) => m.B);
     final aPressed = context.select<Gamepadmanager, bool>((m) => m.A);
     final yPressed = context.select<Gamepadmanager, bool>((m) => m.Y);
+    final blPressed = context.select<Gamepadmanager, bool>((m) => m.LeftBumper);
+    final brPressed = context.select<Gamepadmanager, bool>((m) => m.RightBumper);
     final isRedCorner = context.watch<Websocketmanager>().corner;
 
     if (bPressed && !_wasBPressed) {
@@ -185,6 +188,18 @@ class ControllerPage extends State<Controller> {
       });
     } else if (!yPressed && _wasYPressed) {
       _wasYPressed = false; // ボタンが離されたらリセット
+    }
+
+    if (blPressed || brPressed && !_wasBumperPressed){
+      _wasBumperPressed = true;
+      WidgetsBinding.instance.addPersistentFrameCallback((_){
+        slow = true;
+      });
+    } else if (!blPressed && !brPressed && _wasBumperPressed){
+      _wasBumperPressed = false;
+      WidgetsBinding.instance.addPersistentFrameCallback((_){
+        slow = false;
+      });
     }
     
     return Scaffold(

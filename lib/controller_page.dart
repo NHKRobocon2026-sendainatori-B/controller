@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:nativewrappers/_internal/vm/bin/common_patch.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gamepads/gamepads.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,8 @@ class ControllerPage extends State<Controller> {
   bool auto = false;
   bool autoProblem = false;
   bool slow = false;
+  bool lock = false;
+  bool lockProblem = false;
 
   //service通信用フラッグ
   bool _wasBPressed = false;
@@ -32,6 +35,7 @@ class ControllerPage extends State<Controller> {
   bool _wasYPressed = false;
   bool _isAuto = false;
   bool _wasBumperPressed = false;
+  bool _isLock = false;
 
   void _startTimer(){
     _timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
@@ -137,6 +141,30 @@ class ControllerPage extends State<Controller> {
     }
 
     _isAuto = false;
+  }
+
+  Future<void> _requestLock() async {
+    final wsManager = context.read<Websocketmanager>();
+    if (!wsManager.isConnected) return;
+    if (!_isLock) return;
+    _isLock = true;
+
+    final response = await wsManager.sendService(
+      service: "/lock_service", 
+      type: "example_interfaces/srv/SetBool",
+      args: {"data" : !lock}
+    );
+
+    if (response['success'] == true){
+      setState(() {
+        lock = !lock;
+        lockProblem = false;
+      });
+    } else {
+      setState(() {
+        lockProblem = true;
+      });
+    }
   }
 
   @override

@@ -96,7 +96,7 @@ class ControllerPage extends State<Controller> {
     _isLoading = true;
 
     final response = await wsManager.sendService(
-      service: 'loader_service', 
+      service: '/loader_service', 
       type: 'example_interfaces/srv/Trigger'
     );
 

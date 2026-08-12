@@ -72,7 +72,7 @@ class ControllerPage extends State<Controller> {
     final response = await wsManager.sendService(
       service: "/shooter_service", 
       type:'example_interfaces/srv/SetBool',
-      args: {"data" : shooter}
+      args: {"data" : !shooter}
     );
 
     if (response['success'] == true){

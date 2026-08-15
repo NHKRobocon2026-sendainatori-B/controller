@@ -220,12 +220,12 @@ class ControllerPage extends State<Controller> {
 
     if (blPressed || brPressed && !_wasBumperPressed){
       _wasBumperPressed = true;
-      WidgetsBinding.instance.addPersistentFrameCallback((_){
+      WidgetsBinding.instance.addPostFrameCallback((_){
         slow = true;
       });
     } else if (!blPressed && !brPressed && _wasBumperPressed){
       _wasBumperPressed = false;
-      WidgetsBinding.instance.addPersistentFrameCallback((_){
+      WidgetsBinding.instance.addPostFrameCallback((_){
         slow = false;
       });
     }

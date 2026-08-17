@@ -5,6 +5,7 @@ import 'package:gamepads/gamepads.dart';
 import 'package:provider/provider.dart';
 import 'websocketmanager.dart';
 import 'gamepadmanager.dart';
+import 'CustomPainter.dart';
 
 enum SetZeroState { 
   ready, 
@@ -221,6 +222,8 @@ class ControllerPage extends State<Controller> {
     final blPressed = context.select<Gamepadmanager, bool>((m) => m.LeftBumper);
     final brPressed = context.select<Gamepadmanager, bool>((m) => m.RightBumper);
     final isRedCorner = context.watch<Websocketmanager>().corner;
+    final robotX = context.select<Websocketmanager, double>((m) => m.robotX);
+    final robotY = context.select<Websocketmanager, double>((m) => m.robotY);
 
     if (bPressed && !_wasBPressed) {
       _wasBPressed = true;
@@ -285,7 +288,31 @@ class ControllerPage extends State<Controller> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child: Text("map")
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Stack(
+                          children: [
+                            Image.asset(
+                              '',//imgファイルを入れよう
+                              width: double.infinity,
+                              height: double.infinity,
+                              fit: BoxFit.fill,
+                            ),
+
+                            Positioned.fill(
+                              child: CustomPaint(
+                                painter: RobotMapPainter(
+                                  robotX: robotX, 
+                                  robotY: robotY
+                                ),
+                              )
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                   SizedBox(height: 10,),
                   Expanded(

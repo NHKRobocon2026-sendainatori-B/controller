@@ -1,18 +1,22 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-class Websocketmanager {
+class Websocketmanager with ChangeNotifier {
   WebSocketChannel? channel;
   final Map<String, Completer<Map<String, dynamic>>> _pendingRequests = {};
   bool get isConnected => channel != null;
   bool corner = false;
+  double robotX = 0;
+  double robotY = 0;
   Function? setZeroResult;
 
   void setCorner(bool isRed) {
     corner = isRed;
+    notifyListeners();
   }
 
   void connect(String ipAddress) {
@@ -23,9 +27,17 @@ class Websocketmanager {
       //最初にsendしてsubscrideしよう
       send({
         'op': 'subscribe',
-        'topic': '/shutdown_result',
+        'topic': '/amcl_pose',
+        'type': 'geometry_msgs/msg/PoseWithCovarianceStamped',
+      });
+
+      send({
+        'op': 'subscribe',
+        'topic': '/setZero_success',
         'type': 'std_msgs/msg/Bool',
       });
+
+      notifyListeners();
 
       /**
        * 情報を受け取ったときの動き
@@ -42,7 +54,14 @@ class Websocketmanager {
     if(channel != null){
       channel!.sink.close();
       channel = null;
+      notifyListeners();
     }
+  }
+
+  @override
+  void dispose() {
+    disconnect(); // 切断を実行
+    super.dispose();
   }
 
   void send(Map<String, dynamic> data){
@@ -75,6 +94,12 @@ class Websocketmanager {
         final bool error = decoded['msg']['data'];
         if (setZeroResult == null) return;
         setZeroResult!(error);
+      }
+      if (decoded['topic'] == '/amcl_pose') {
+        //自己位置
+        robotX = decoded['msg']['pose']['pose']['pose']['position']['x'];
+        robotY = decoded['msg']['pose']['pose']['pose']['position']['y'];
+        notifyListeners();
       }
     }
   }

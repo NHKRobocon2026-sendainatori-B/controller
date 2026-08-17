@@ -9,9 +9,8 @@ void main(){
   runApp(
     MultiProvider(
       providers: [
-        Provider(
+        ChangeNotifierProvider(
           create: (_) => Websocketmanager(), 
-          dispose: (_, manager) => manager.disconnect(),
         ),
         ChangeNotifierProvider(
           create: (_) => Gamepadmanager(),

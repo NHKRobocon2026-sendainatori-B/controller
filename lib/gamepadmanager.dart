@@ -25,7 +25,7 @@ class Gamepadmanager with ChangeNotifier {
   bool _Y = false;
   bool get Y => _Y;
   bool _LeftBumper = false;
-  bool get LeftBumper => LeftBumper;
+  bool get LeftBumper => _LeftBumper;
   bool _RightBumper = false;
   bool get RightBumper => _RightBumper;
 

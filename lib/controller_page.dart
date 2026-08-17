@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:nativewrappers/_internal/vm/bin/common_patch.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gamepads/gamepads.dart';
@@ -272,7 +271,72 @@ class ControllerPage extends State<Controller> {
                           ]
                         )
                       ),
-                      
+                      Card(
+                        elevation: 3,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            color: (isRedCorner) ? Colors.red : Colors.blue,
+                            width: 1
+                          ),
+                          borderRadius: BorderRadiusGeometry.circular(8)
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                  text: "射出:  ",
+                                  style: TextStyle(color: Colors.black, fontSize: 20),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: (shooterProblem) ? "問題発生!!" : "問題なし",
+                                      style: TextStyle(fontSize: 20, color: (shooterProblem) ? Colors.red : Colors.blue)
+                                    )
+                                  ]
+                                )
+                              ),
+                              RichText(
+                                text: TextSpan(
+                                  text: "装填:  ",
+                                  style: TextStyle(color: Colors.black, fontSize: 20),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: (loaderProblem) ? "問題発生!!" : "問題なし",
+                                      style: TextStyle(fontSize: 20, color: (loaderProblem) ? Colors.red : Colors.blue)
+                                    )
+                                  ]
+                                )
+                              ),
+                              RichText(
+                                text: TextSpan(
+                                  text: "自動操縦:  ",
+                                  style: TextStyle(color: Colors.black, fontSize: 20),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: (autoProblem) ? "問題発生!!" : "問題なし",
+                                      style: TextStyle(fontSize: 20, color: (autoProblem) ? Colors.red : Colors.blue)
+                                    )
+                                  ]
+                                )
+                              ),
+                              RichText(
+                                text: TextSpan(
+                                  text: "非常停止:  ",
+                                  style: TextStyle(color: Colors.black, fontSize: 20),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: (lockProblem) ? "問題発生!!" : "問題なし",
+                                      style: TextStyle(fontSize: 20, color: (lockProblem) ? Colors.red : Colors.blue)
+                                    )
+                                  ]
+                                )
+                              ),
+                            ],
+                          ),
+                        )
+                      )
                     ],
                   )
                 ],

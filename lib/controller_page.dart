@@ -6,6 +6,12 @@ import 'package:provider/provider.dart';
 import 'websocketmanager.dart';
 import 'gamepadmanager.dart';
 
+enum SetZeroState { 
+  ready, 
+  running, 
+  error;
+}
+
 class Controller extends StatefulWidget {
   final PageController pageController;
   Controller({super.key, required this.pageController});
@@ -25,6 +31,7 @@ class ControllerPage extends State<Controller> {
   bool slow = false;
   bool lock = false;
   bool lockProblem = false;
+  SetZeroState setZeroState = SetZeroState.ready;
 
   //service通信用フラッグ
   bool _wasBPressed = false;
@@ -172,12 +179,37 @@ class ControllerPage extends State<Controller> {
     _startTimer();
 
     //始まったときの処理
+
+    WidgetsBinding.instance.addPersistentFrameCallback((_) {
+      final wsManager = context.read<Websocketmanager>();
+
+      wsManager.setZeroResult = (bool success) {
+        if (mounted) return;
+        setZeroState = (success) ? SetZeroState.ready : SetZeroState.error;
+      };
+    });
   }
 
   @override
   void dispose() {
     _timer?.cancel();
     super.dispose();
+  }
+
+  String get _SetzeroString {
+    return switch(setZeroState){
+      SetZeroState.ready => '完了',
+      SetZeroState.running => '準備中',
+      SetZeroState.error => 'エラー',
+    };
+  }
+
+  Color get _SetzeroColor {
+    return switch (setZeroState) {
+      SetZeroState.ready => Colors.blue,
+      SetZeroState.running => Colors.orange,
+      SetZeroState.error => Colors.red,
+    };
   }
 
   @override
@@ -311,6 +343,18 @@ class ControllerPage extends State<Controller> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      text: "足回り:  ",
+                                      style: TextStyle(color: Colors.black, fontSize: 20),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: _SetzeroString,
+                                          style:  TextStyle(fontSize: 20, color: _SetzeroColor)
+                                        )
+                                      ]
+                                    ),
+                                  ),
                                   RichText(
                                     text: TextSpan(
                                       text: "射出:  ",

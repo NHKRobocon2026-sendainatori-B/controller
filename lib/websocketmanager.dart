@@ -9,6 +9,7 @@ class Websocketmanager {
   final Map<String, Completer<Map<String, dynamic>>> _pendingRequests = {};
   bool get isConnected => channel != null;
   bool corner = false;
+  Function? setZeroResult;
 
   void setCorner(bool isRed) {
     corner = isRed;
@@ -64,6 +65,16 @@ class Websocketmanager {
         final completer = _pendingRequests.remove(requestId);
         // 待機していた Future に ROS 2 の返り値を渡して完了させる
         completer?.complete(decoded['values'] ?? {});
+      }
+    }
+
+    if (decoded['op'] == 'publish') {
+      //ros2からのデータ
+      if (decoded['topic'] == '/setZero_success'){
+        //setZeroの設定
+        final bool error = decoded['msg']['data'];
+        if (setZeroResult == null) return;
+        setZeroResult!(error);
       }
     }
   }

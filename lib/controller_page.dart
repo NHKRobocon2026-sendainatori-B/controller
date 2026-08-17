@@ -232,113 +232,141 @@ class ControllerPage extends State<Controller> {
     return Scaffold(
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            SizedBox(
+              height: 10,
+            ),
             Container(
               height: 30,
+              width: double.infinity,
               color: (isRedCorner) ? Colors.red : Colors.blue,
               child: Text((isRedCorner) ? "赤コーナー" : "青コーナー"),
             ),
-            Container(
+            SizedBox(
+              height: 10,
+            ),
+            Expanded(
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  //何らかのなんか,
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                          text: "AUTO:  ",
-                          style: TextStyle(color: Colors.black, fontSize: 20),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: (auto) ? "ON" : "OFF",
-                              style: TextStyle(fontSize: 20, color: (auto) ? Colors.red : Colors.black)
-                            )
-                          ]
-                        )
-                      ),
-                      RichText(
-                        text: TextSpan(
-                          text: "SLOW:  ",
-                          style: TextStyle(color: Colors.black, fontSize: 20),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: (slow) ? "ON" : "OFF",
-                              style: TextStyle(fontSize: 20, color: (auto) ? Colors.red : Colors.black)
-                            )
-                          ]
-                        )
-                      ),
-                      Card(
-                        elevation: 3,
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(
-                            color: (isRedCorner) ? Colors.red : Colors.blue,
-                            width: 1
-                          ),
-                          borderRadius: BorderRadiusGeometry.circular(8)
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(5),
+                  Expanded(
+                    child: Text("map")
+                  ),
+                  SizedBox(height: 10,),
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               RichText(
                                 text: TextSpan(
-                                  text: "射出:  ",
+                                  text: "AUTO:  ",
                                   style: TextStyle(color: Colors.black, fontSize: 20),
                                   children: <TextSpan>[
                                     TextSpan(
-                                      text: (shooterProblem) ? "問題発生!!" : "問題なし",
-                                      style: TextStyle(fontSize: 20, color: (shooterProblem) ? Colors.red : Colors.blue)
+                                      text: (auto) ? "ON" : "OFF",
+                                      style: TextStyle(fontSize: 20, color: (auto) ? Colors.red : Colors.black)
                                     )
                                   ]
                                 )
                               ),
                               RichText(
                                 text: TextSpan(
-                                  text: "装填:  ",
+                                  text: "SLOW:  ",
                                   style: TextStyle(color: Colors.black, fontSize: 20),
                                   children: <TextSpan>[
                                     TextSpan(
-                                      text: (loaderProblem) ? "問題発生!!" : "問題なし",
-                                      style: TextStyle(fontSize: 20, color: (loaderProblem) ? Colors.red : Colors.blue)
-                                    )
-                                  ]
-                                )
-                              ),
-                              RichText(
-                                text: TextSpan(
-                                  text: "自動操縦:  ",
-                                  style: TextStyle(color: Colors.black, fontSize: 20),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text: (autoProblem) ? "問題発生!!" : "問題なし",
-                                      style: TextStyle(fontSize: 20, color: (autoProblem) ? Colors.red : Colors.blue)
-                                    )
-                                  ]
-                                )
-                              ),
-                              RichText(
-                                text: TextSpan(
-                                  text: "非常停止:  ",
-                                  style: TextStyle(color: Colors.black, fontSize: 20),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text: (lockProblem) ? "問題発生!!" : "問題なし",
-                                      style: TextStyle(fontSize: 20, color: (lockProblem) ? Colors.red : Colors.blue)
+                                      text: (slow) ? "ON" : "OFF",
+                                      style: TextStyle(fontSize: 20, color: (auto) ? Colors.red : Colors.black)
                                     )
                                   ]
                                 )
                               ),
                             ],
-                          ),
-                        )
-                      )
-                    ],
-                  )
+                          )
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Card(
+                            elevation: 3,
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                color: (isRedCorner) ? Colors.red : Colors.blue,
+                                width: 1
+                              ),
+                              borderRadius: BorderRadiusGeometry.circular(8)
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(5),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      text: "射出:  ",
+                                      style: TextStyle(color: Colors.black, fontSize: 20),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: (shooterProblem) ? "問題発生!!" : "問題なし",
+                                          style: TextStyle(fontSize: 20, color: (shooterProblem) ? Colors.red : Colors.blue)
+                                        )
+                                      ]
+                                    )
+                                  ),
+                                  RichText(
+                                    text: TextSpan(
+                                      text: "装填:  ",
+                                      style: TextStyle(color: Colors.black, fontSize: 20),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: (loaderProblem) ? "問題発生!!" : "問題なし",
+                                          style: TextStyle(fontSize: 20, color: (loaderProblem) ? Colors.red : Colors.blue)
+                                        )
+                                      ]
+                                    )
+                                  ),
+                                  RichText(
+                                    text: TextSpan(
+                                      text: "自動操縦:  ",
+                                      style: TextStyle(color: Colors.black, fontSize: 20),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: (autoProblem) ? "問題発生!!" : "問題なし",
+                                          style: TextStyle(fontSize: 20, color: (autoProblem) ? Colors.red : Colors.blue)
+                                        )
+                                      ]
+                                    )
+                                  ),
+                                  RichText(
+                                    text: TextSpan(
+                                      text: "非常停止:  ",
+                                      style: TextStyle(color: Colors.black, fontSize: 20),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: (lockProblem) ? "問題発生!!" : "問題なし",
+                                          style: TextStyle(fontSize: 20, color: (lockProblem) ? Colors.red : Colors.blue)
+                                        )
+                                      ]
+                                    )
+                                  ),
+                                ],
+                              ),
+                            )
+                          )
+                        ),
+                      ],
+                    )
+                  ),
                 ],
               ),
             )

@@ -79,22 +79,14 @@ class ConnectionPagestate extends State<ConnectionPage> {
                 await Future.delayed(const Duration(milliseconds: 300));
                 wsManager.setCorner(corner);
                 wsManager.connect(textController.text);
-                final response = wsManager.sendService(
-                  service: "/start_service", 
-                  type: "example_interfaces/srv/Trigger"
-                );
-                //この下のに直すがテスト時は直で行けるようにしないと
-                /*
-                if (response['sucess'] == true){
-                  if (context.mounted) {
-                    widget.pageController.animateToPage(
-                      1, 
-                      duration: const Duration(milliseconds: 500), 
-                      curve: Curves.ease,
-                    );
+                wsManager.send(
+                  {
+                    "op" : "publish",
+                    "topic" : "/start_flag",
+                    "type" : "std_msgs/msg/Empty",
+                    "msg" : {}
                   }
-                }
-                */
+                );
                 if (context.mounted) {
                   widget.pageController.animateToPage(
                     1, 

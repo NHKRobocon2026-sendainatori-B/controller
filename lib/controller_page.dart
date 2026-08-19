@@ -32,7 +32,7 @@ class ControllerPage extends State<Controller> {
   bool slow = false;
   bool lock = false;
   bool lockProblem = false;
-  SetZeroState setZeroState = SetZeroState.ready;
+  SetZeroState setZeroState = SetZeroState.running;
   bool timeOut = false;
 
   //service通信用フラッグ

@@ -74,6 +74,20 @@ class ControllerPage extends State<Controller> {
     wsManager.send(data);
   }
 
+  void send_reset() {
+    final wsManager = context.read<Websocketmanager>();
+    if (!wsManager.isConnected) return;
+
+    Map<String, dynamic> data = {
+      "op" : "publish",
+      "topic" : "/reset_pub",
+      "type" : "std_msgs/msg/Empty",
+      "msg" : {}
+    };
+
+    wsManager.send(data);
+  }
+
   Future<void> _requestShooter() async {
     final wsManager = context.read<Websocketmanager>();
     if (!wsManager.isConnected) return;
@@ -282,7 +296,25 @@ class ControllerPage extends State<Controller> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   ElevatedButton.icon(
-                    onPressed: (){}, 
+                    onPressed: () async {
+                      bool? result = await _check_shutdown(context);
+
+                      if (result == true){
+                        Map<String, dynamic>? shutdown_result = await context.watch<Websocketmanager>().sendService(
+                          service: '/shutdown', 
+                          type: 'example_interfaces/srv/Trigger'
+                        );
+
+                        if (shutdown_result['sucess'] == true){
+                          if (!mounted) return;
+                            widget.pageController.animateToPage(
+                            0, 
+                            duration: Duration(milliseconds: 500), 
+                            curve: Curves.easeInOut
+                          );
+                        }
+                      }
+                    }, 
                     icon: const Icon(Icons.power_settings_new, color: Colors.white),
                     label: const Text(
                       "shutdown",
@@ -306,7 +338,12 @@ class ControllerPage extends State<Controller> {
                   ),
                   Text((isRedCorner) ? "赤コーナー" : "青コーナー"),
                   ElevatedButton.icon(
-                    onPressed: (){}, 
+                    onPressed: () async {
+                      bool? result = await _check_reset(context);
+                      if (result == true) {
+                        send_reset();
+                      }
+                    }, 
                     icon: const Icon(Icons.refresh, color: Colors.white),
                     label: const Text(
                       "reset",
@@ -497,7 +534,19 @@ class ControllerPage extends State<Controller> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: () async {
+          Map<String, dynamic>? lock_result = await context.watch<Websocketmanager>().sendService(
+            service: '/lock_service', 
+            type: 'example_interfaces/srv/SetBool', 
+            args: { "data" : !lock }
+          );
+
+          if (lock_result['success'] == true) {
+            setState(() {
+              lock = !lock;
+            });
+          }
+        },
         backgroundColor: Colors.pinkAccent,
         foregroundColor: Colors.white,
         elevation: 6, 
@@ -507,8 +556,136 @@ class ControllerPage extends State<Controller> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16), 
         ),
-        child: Icon(Icons.stop_circle),
+        child: Icon((lock) ? Icons.play_circle_fill : Icons.stop_circle),
       ),
     );
   }
+}
+
+Future<bool?> _check_reset(BuildContext context) async {
+  return await showDialog(
+    context: context, 
+    builder: (BuildContext context){
+      return AlertDialog(
+        title: Text("reset_確認"),
+        content: Text('非常停止ボタンを押されたときですよ'),
+        actions: <Widget>[
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            }, 
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.redAccent, 
+              foregroundColor: Colors.white,
+              splashFactory: InkRipple.splashFactory,
+              overlayColor: Colors.white.withValues(alpha: 0.3), 
+              padding: const EdgeInsets.symmetric(vertical: 1),
+              elevation: 4, 
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10), 
+              ),
+            ),
+            child: Text(
+              'いいえ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 10.0,
+                letterSpacing: 0.1,
+              ),
+            ),
+          ), 
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            }, 
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green, 
+              foregroundColor: Colors.white,
+              splashFactory: InkRipple.splashFactory,
+              overlayColor: Colors.white.withValues(alpha: 0.3), 
+              padding: const EdgeInsets.symmetric(vertical: 1),
+              elevation: 4, 
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10), 
+              ),
+            ),
+            child: Text(
+              'はい',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 10.0,
+                letterSpacing: 0.1,
+              ),
+            ),
+          )
+        ],
+      );
+    }
+  );
+}
+
+Future<bool?> _check_shutdown(BuildContext context) async {
+  return await showDialog(
+    context: context, 
+    builder: (BuildContext context){
+      return AlertDialog(
+        title: Text("reset_確認"),
+        content: Text('試合が終わったときですよ'),
+        actions: <Widget>[
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            }, 
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.redAccent, 
+              foregroundColor: Colors.white,
+              splashFactory: InkRipple.splashFactory,
+              overlayColor: Colors.white.withValues(alpha: 0.3), 
+              padding: const EdgeInsets.symmetric(vertical: 1),
+              elevation: 4, 
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10), 
+              ),
+            ),
+            child: Text(
+              'いいえ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 10.0,
+                letterSpacing: 0.1,
+              ),
+            ),
+          ), 
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            }, 
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green, 
+              foregroundColor: Colors.white,
+              splashFactory: InkRipple.splashFactory,
+              overlayColor: Colors.white.withValues(alpha: 0.3), 
+              padding: const EdgeInsets.symmetric(vertical: 1),
+              elevation: 4, 
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10), 
+              ),
+            ),
+            child: Text(
+              'はい',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 10.0,
+                letterSpacing: 0.1,
+              ),
+            ),
+          )
+        ],
+      );
+    }
+  );
 }

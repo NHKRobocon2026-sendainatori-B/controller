@@ -596,11 +596,15 @@ class ControllerPage extends State<Controller> {
               setState(() {
                 lock = !lock;
                 timeOut = false;
+                lockProblem = false;
               });
+            } else {
+              lockProblem = true;
             }
           } on TimeoutException {
             setState(() {
               timeOut = true;
+              lockProblem = true;
             });
           }
         },

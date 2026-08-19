@@ -69,6 +69,7 @@ class Websocketmanager with ChangeNotifier {
       print("Send failed: Not connected");
       return;
     }
+    print('[WS OUT] $data');
     channel!.sink.add(jsonEncode(data));
   }
   

@@ -300,7 +300,7 @@ class ControllerPage extends State<Controller> {
                       bool? result = await _check_shutdown(context);
 
                       if (result == true){
-                        Map<String, dynamic>? shutdown_result = await context.watch<Websocketmanager>().sendService(
+                        Map<String, dynamic>? shutdown_result = await context.read<Websocketmanager>().sendService(
                           service: '/shutdown', 
                           type: 'example_interfaces/srv/Trigger'
                         );
@@ -535,7 +535,7 @@ class ControllerPage extends State<Controller> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          Map<String, dynamic>? lock_result = await context.watch<Websocketmanager>().sendService(
+          Map<String, dynamic>? lock_result = await context.read<Websocketmanager>().sendService(
             service: '/lock_service', 
             type: 'example_interfaces/srv/SetBool', 
             args: { "data" : !lock }

@@ -293,12 +293,14 @@ class ControllerPage extends State<Controller> {
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple, // 背景色
-                      foregroundColor: Colors.white, // テキスト・アイコン色
+                      backgroundColor: Colors.deepPurple, 
+                      foregroundColor: Colors.white,
+                      splashFactory: InkRipple.splashFactory,
+                      overlayColor: Colors.white.withValues(alpha: 0.3), 
                       padding: const EdgeInsets.symmetric(vertical: 1),
-                      elevation: 4, // 影の深さ
+                      elevation: 4, 
                       shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10), // 角丸
+                        borderRadius: BorderRadius.circular(10), 
                       ),
                     ),
                   ),
@@ -315,12 +317,14 @@ class ControllerPage extends State<Controller> {
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amber, // 背景色
-                      foregroundColor: Colors.white, // テキスト・アイコン色
+                      backgroundColor: Colors.amber, 
+                      foregroundColor: Colors.white, 
+                      splashFactory: InkRipple.splashFactory,
+                      overlayColor: Colors.black87.withValues(alpha: 0.3),
                       padding: const EdgeInsets.symmetric(vertical: 1),
                       elevation: 4, // 影の深さ
                       shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10), // 角丸
+                      borderRadius: BorderRadius.circular(10), 
                       ),
                     ),
                   ),

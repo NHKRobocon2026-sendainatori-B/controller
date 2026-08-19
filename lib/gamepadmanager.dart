@@ -39,6 +39,11 @@ class Gamepadmanager with ChangeNotifier {
 
   void _startListening(){
     _subscription = Gamepads.events.listen((event) {
+      if (!_isConnected) {
+        _isConnected = true;
+        notifyListeners();
+      }
+
       final normalized = _normalizer.normalize(event);
 
       if (normalized.isNotEmpty){
@@ -110,7 +115,11 @@ class Gamepadmanager with ChangeNotifier {
   Future<bool> checkGamepadConnection() async{
     List<GamepadController> usbDevices = await Gamepads.list();
 
-    _isConnected = usbDevices.isNotEmpty;
+    bool newStatus = usbDevices.isNotEmpty;
+    if (_isConnected != newStatus) {
+      _isConnected = newStatus;
+      notifyListeners(); 
+    }
 
     return _isConnected;
   } 

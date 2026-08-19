@@ -79,11 +79,8 @@ class Websocketmanager with ChangeNotifier {
     if (decoded['op'] == 'service_response') {
       final String requestId = decoded['id'];
 
-      // 💡 送信時に記録したIDが存在するかチェック
       if (_pendingRequests.containsKey(requestId)) {
-        // マップから取り出して削除
         final completer = _pendingRequests.remove(requestId);
-        // 待機していた Future に ROS 2 の返り値を渡して完了させる
         completer?.complete(decoded['values'] ?? {});
       }
     }

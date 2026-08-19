@@ -105,7 +105,9 @@ class Websocketmanager with ChangeNotifier {
   Future<Map<String, dynamic>> sendService(
     {required String service,
     required String type,
-    Map<String, dynamic>? args}) async {
+    Map<String, dynamic>? args, 
+    Duration timeout = const Duration(seconds: 5)
+    }) async {
     final requestId = "req_${DateTime.now().microsecondsSinceEpoch}";
     final completer = Completer<Map<String, dynamic>>();
 
@@ -120,6 +122,14 @@ class Websocketmanager with ChangeNotifier {
       'id': requestId,
     });
 
-    return completer.future;
+    try {
+    // 指定時間内にレスポンスが来なければ TimeoutException を発生させる
+      return await completer.future.timeout(timeout);
+    } on TimeoutException {
+    // タイムアウトしたリクエストをマップから削除（メモリリーク防止）
+      _pendingRequests.remove(requestId);
+      print("Service Timeout: $service ($requestId)");
+      rethrow; // 呼び出し側で catch できるように再スロー
+    }
   }
 }

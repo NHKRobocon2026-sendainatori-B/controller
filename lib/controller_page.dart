@@ -33,6 +33,7 @@ class ControllerPage extends State<Controller> {
   bool lock = false;
   bool lockProblem = false;
   SetZeroState setZeroState = SetZeroState.ready;
+  bool timeOut = false;
 
   //service通信用フラッグ
   bool _wasBPressed = false;
@@ -94,20 +95,28 @@ class ControllerPage extends State<Controller> {
     if (_isShooting) return; // 通信中は重複送信しない
     _isShooting = true;
 
-    final response = await wsManager.sendService(
-      service: "/shooter_service", 
-      type:'example_interfaces/srv/SetBool',
-      args: {"data" : !shooter}
-    );
-
-    if (response['success'] == true){
+    try {
+      final response = await wsManager.sendService(
+        service: "/shooter_service", 
+        type:'example_interfaces/srv/SetBool',
+        args: {"data" : !shooter}
+      );
+      if (response['sucess'] == true){
+        setState(() {
+          shooter = !shooter;
+          shooterProblem = false;
+          timeOut = false;
+        });
+      } else {
+        setState(() {
+          shooterProblem = true;
+          timeOut = false;
+        });
+      }
+    } on TimeoutException {
       setState(() {
-        shooter = !shooter; //ここで描画が変化される？まだ用意してないけど
         shooterProblem = true;
-      });
-    } else {
-      setState(() {
-        shooterProblem = false;
+        timeOut = true;
       });
     }
 
@@ -120,19 +129,27 @@ class ControllerPage extends State<Controller> {
     if (_isLoading) return; // 通信中は重複送信しない
     _isLoading = true;
 
-    final response = await wsManager.sendService(
-      service: '/loader_service', 
-      type: 'example_interfaces/srv/Trigger'
-    );
-
-    if (response['success'] == true) {
-      setState(() {
-        loaderProblem = false;
-      }); 
-    } else {
+    try {
+      final response = await wsManager.sendService(
+        service: '/loader_service', 
+        type: 'example_interfaces/srv/Trigger'
+      );
+      if (response['success']  == true){
+        setState(() {
+          loaderProblem = false;
+          timeOut = false;
+        });
+      } else {
+        setState(() {
+          loaderProblem = true;
+          timeOut = false;
+        });
+      }
+    } on TimeoutException {
       setState(() {
         loaderProblem = true;
-      }); 
+        timeOut = true;
+      });
     }
 
     _isLoading = false;
@@ -144,20 +161,28 @@ class ControllerPage extends State<Controller> {
     if (_isAuto) return; // 通信中は重複送信しない
     _isAuto = true;
 
-    final respose = await wsManager.sendService(
-      service: "/set_goal", 
-      type: "example_interfaces/srv/SetBool",
-      args: { "data" : !auto }
-    );
-
-    if (respose['success'] == true){
-      setState(() {
-        auto = !auto;
-        autoProblem = false;
-      });
-    } else {
+    try {
+      final response = await wsManager.sendService(
+        service: "/set_goal", 
+        type: "example_interfaces/srv/SetBool",
+        args: { "data" : !auto }
+      );
+      if (response['success']  == true){
+        setState(() {
+          auto = !auto;
+          autoProblem = false;
+          timeOut = false;
+        });
+      } else {
+        setState(() {
+          autoProblem = true;
+          timeOut = false;
+        });
+      }
+    } on TimeoutException {
       setState(() {
         autoProblem = true;
+        timeOut = true;
       });
     }
 
@@ -170,20 +195,28 @@ class ControllerPage extends State<Controller> {
     if (!_isLock) return;
     _isLock = true;
 
-    final response = await wsManager.sendService(
-      service: "/lock_service", 
-      type: "example_interfaces/srv/SetBool",
-      args: {"data" : !lock}
-    );
-
-    if (response['success'] == true){
-      setState(() {
-        lock = !lock;
-        lockProblem = false;
-      });
-    } else {
+    try {
+      final response = await wsManager.sendService(
+        service: "/lock_service", 
+        type: "example_interfaces/srv/SetBool",
+        args: {"data" : !lock}
+      );
+      if (response['success']  == true){
+        setState(() {
+          lock = !lock;
+          lockProblem = false;
+          timeOut = false;
+        });
+      } else {
+        setState(() {
+          lockProblem = true;
+          timeOut = false;
+        });
+      }
+    } on TimeoutException {
       setState(() {
         lockProblem = true;
+        timeOut = true;
       });
     }
   }
@@ -285,7 +318,7 @@ class ControllerPage extends State<Controller> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(
-              height: 10,
+              height: 50,
             ),
             Container(
               height: 30,
@@ -300,18 +333,23 @@ class ControllerPage extends State<Controller> {
                       bool? result = await _check_shutdown(context);
 
                       if (result == true){
-                        Map<String, dynamic>? shutdown_result = await context.read<Websocketmanager>().sendService(
-                          service: '/shutdown', 
-                          type: 'example_interfaces/srv/Trigger'
-                        );
-
-                        if (shutdown_result['sucess'] == true){
-                          if (!mounted) return;
-                            widget.pageController.animateToPage(
-                            0, 
-                            duration: Duration(milliseconds: 500), 
-                            curve: Curves.easeInOut
+                        try {
+                          final response =  await context.read<Websocketmanager>().sendService(
+                            service: '/shutdown', 
+                            type: 'example_interfaces/srv/Trigger'
                           );
+                          if (response['sucess'] == true){
+                            if (!mounted) return;
+                              widget.pageController.animateToPage(
+                              0, 
+                              duration: Duration(milliseconds: 500), 
+                              curve: Curves.easeInOut
+                            );
+                          }
+                        } on TimeoutException {
+                          setState(() {
+                            timeOut = true;
+                          });
                         }
                       }
                     }, 
@@ -519,6 +557,18 @@ class ControllerPage extends State<Controller> {
                                       ]
                                     )
                                   ),
+                                  RichText(
+                                    text: TextSpan(
+                                      text: "タイムアウト:  ",
+                                      style: TextStyle(color: Colors.black, fontSize: 20),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: (timeOut) ? "問題発生!!" : "問題なし",
+                                          style: TextStyle(fontSize: 20, color: (timeOut) ? Colors.red : Colors.blue)
+                                        )
+                                      ]
+                                    )
+                                  ),
                                 ],
                               ),
                             )
@@ -535,15 +585,22 @@ class ControllerPage extends State<Controller> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          Map<String, dynamic>? lock_result = await context.read<Websocketmanager>().sendService(
-            service: '/lock_service', 
-            type: 'example_interfaces/srv/SetBool', 
-            args: { "data" : !lock }
-          );
-
-          if (lock_result['success'] == true) {
+          try {
+            final response = await context.read<Websocketmanager>().sendService(
+              service: '/lock_service', 
+              type: 'example_interfaces/srv/SetBool', 
+              args: { "data" : !lock },
+              timeout: Duration(seconds: 1)
+            );
+            if (response ['success'] == true) {
+              setState(() {
+                lock = !lock;
+                timeOut = false;
+              });
+            }
+          } on TimeoutException {
             setState(() {
-              lock = !lock;
+              timeOut = true;
             });
           }
         },
@@ -631,7 +688,7 @@ Future<bool?> _check_shutdown(BuildContext context) async {
     context: context, 
     builder: (BuildContext context){
       return AlertDialog(
-        title: Text("reset_確認"),
+        title: Text("shudown_確認"),
         content: Text('試合が終わったときですよ'),
         actions: <Widget>[
           ElevatedButton(

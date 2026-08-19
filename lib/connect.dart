@@ -26,6 +26,7 @@ class ConnectionPagestate extends State<ConnectionPage> {
   Widget build(BuildContext context) {
     final wsManager = context.read<Websocketmanager>();
     final gamepad = context.watch<Gamepadmanager>();
+    bool connected = context.watch<Gamepadmanager>().isConnected;
 
     return Center(
       child: GestureDetector(
@@ -37,7 +38,7 @@ class ConnectionPagestate extends State<ConnectionPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text("コントローラー接続："),
-                Text((gamepad.isConnected) ? "完了" : "未完了")
+                Text(connected ? "完了" : "未完了")
               ],
             ),
 

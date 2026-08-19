@@ -374,7 +374,15 @@ class ControllerPage extends State<Controller> {
                       ),
                     ),
                   ),
-                  Text((isRedCorner) ? "赤コーナー" : "青コーナー"),
+                  Text(
+                    (isRedCorner) ? "赤コーナー" : "青コーナー",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                      color: Colors.white
+                    ),
+                  ),
                   ElevatedButton.icon(
                     onPressed: () async {
                       bool? result = await _check_reset(context);

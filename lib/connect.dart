@@ -36,8 +36,24 @@ class ConnectionPagestate extends State<ConnectionPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("コントローラー接続："),
-                Text(isConnected ? "完了" : "未完了")
+                Text(
+                  "コントローラー接続： ",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
+                    color: Colors.black
+                  ),
+                ),
+                Text(
+                  isConnected ? "完了" : "未完了",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
+                    color: isConnected ? Colors.green : Colors.red
+                  ),
+                )
               ],
             ),
 

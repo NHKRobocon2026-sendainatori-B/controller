@@ -277,7 +277,55 @@ class ControllerPage extends State<Controller> {
               height: 30,
               width: double.infinity,
               color: (isRedCorner) ? Colors.red : Colors.blue,
-              child: Text((isRedCorner) ? "赤コーナー" : "青コーナー"),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: (){}, 
+                    icon: const Icon(Icons.power_settings_new, color: Colors.white),
+                    label: const Text(
+                      "shutdown",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepPurple, // 背景色
+                      foregroundColor: Colors.white, // テキスト・アイコン色
+                      padding: const EdgeInsets.symmetric(vertical: 1),
+                      elevation: 4, // 影の深さ
+                      shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10), // 角丸
+                      ),
+                    ),
+                  ),
+                  Text((isRedCorner) ? "赤コーナー" : "青コーナー"),
+                  ElevatedButton.icon(
+                    onPressed: (){}, 
+                    icon: const Icon(Icons.refresh, color: Colors.white),
+                    label: const Text(
+                      "reset",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.amber, // 背景色
+                      foregroundColor: Colors.white, // テキスト・アイコン色
+                      padding: const EdgeInsets.symmetric(vertical: 1),
+                      elevation: 4, // 影の深さ
+                      shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10), // 角丸
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             SizedBox(
               height: 10,
@@ -295,7 +343,7 @@ class ControllerPage extends State<Controller> {
                         child: Stack(
                           children: [
                             Image.asset(
-                              '',//imgファイルを入れよう
+                              './assets/map_sample.png',//imgファイルを入れよう
                               width: double.infinity,
                               height: double.infinity,
                               fit: BoxFit.fill,
@@ -443,6 +491,19 @@ class ControllerPage extends State<Controller> {
             )
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){},
+        backgroundColor: Colors.pinkAccent,
+        foregroundColor: Colors.white,
+        elevation: 6, 
+        focusElevation: 10, 
+        hoverElevation: 8, 
+        splashColor: Colors.amberAccent, 
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16), 
+        ),
+        child: Icon(Icons.stop_circle),
       ),
     );
   }

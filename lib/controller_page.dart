@@ -41,7 +41,7 @@ class ControllerPage extends State<Controller> {
   bool _wasAPressed = false;
   bool _isLoading = false;
   bool _wasYPressed = false;
-  bool _isAuto = false;
+  bool _isAuto = true; //オートモード無効
   bool _wasBumperPressed = false;
   bool _isLock = false;
 

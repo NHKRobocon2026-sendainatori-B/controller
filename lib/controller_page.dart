@@ -377,7 +377,7 @@ class ControllerPage extends State<Controller> {
                   Text(
                     (isRedCorner) ? "赤コーナー" : "青コーナー",
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.2,
                       color: Colors.white

@@ -385,6 +385,7 @@ class ControllerPage extends State<Controller> {
                   ),
                   ElevatedButton.icon(
                     onPressed: () async {
+                      if (!lock) return;
                       bool? result = await _check_reset(context);
                       if (result == true) {
                         send_reset();

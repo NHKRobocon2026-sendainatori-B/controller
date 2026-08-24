@@ -101,7 +101,7 @@ class ControllerPage extends State<Controller> {
         type:'example_interfaces/srv/SetBool',
         args: {"data" : !shooter}
       );
-      if (response['sucess'] == true){
+      if (response['success'] == true){
         setState(() {
           shooter = !shooter;
           shooterProblem = false;
@@ -339,7 +339,7 @@ class ControllerPage extends State<Controller> {
                             service: '/shutdown', 
                             type: 'example_interfaces/srv/Trigger'
                           );
-                          if (response['sucess'] == true){
+                          if (response['success'] == true){
                             if (!mounted) return;
                               widget.pageController.animateToPage(
                               0, 

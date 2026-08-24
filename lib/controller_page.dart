@@ -330,6 +330,7 @@ class ControllerPage extends State<Controller> {
                 children: [
                   ElevatedButton.icon(
                     onPressed: () async {
+                      if (!lock) return;
                       bool? result = await _check_shutdown(context);
 
                       if (result == true){

@@ -299,7 +299,7 @@ class ControllerPage extends State<Controller> {
       _wasYPressed = false; // ボタンが離されたらリセット
     }
 
-    if (blPressed || brPressed && !_wasBumperPressed){
+    if (( blPressed || brPressed ) && !_wasBumperPressed){
       _wasBumperPressed = true;
       WidgetsBinding.instance.addPostFrameCallback((_){
         slow = true;

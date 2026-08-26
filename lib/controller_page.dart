@@ -435,7 +435,7 @@ class ControllerPage extends State<Controller> {
                               './assets/map_sample.png',//imgファイルを入れよう
                               width: double.infinity,
                               height: double.infinity,
-                              fit: BoxFit.fill,
+                              fit: BoxFit.contain,
                             ),
 
                             Positioned.fill(

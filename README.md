@@ -1,20 +1,27 @@
 # nhk_robocon_2026_controller
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
 ## 概要
-スマホを用いたコントローラーです。flutterで開発しています
+高専ロボコン2026用に作成した。スマホを用いたコントローラーです。flutterで開発しています<br>
+ゲームコントローラー(GameSir G8 Galileo)を取り付け動かしています
+
+## 操作方法
+左スティック：ロボットの移動
+右スティック：ロボットの旋回
+B：射出動作開始、停止
+A：装填を動かす
+X：オートモード開始、停止
+RB、LB：ロボットの移動を遅くする
+
+## 使用されている技術
+- cupertino_icons
+- web_socket_channel
+- gamepads
+- provider
+
+## 注目点
+- ROS2と連動できるようになっている
+- ROS2からのデータをもとにどこに問題が出ているか、画面に表示されるようになっている
+- 画面右側にロボットが現在どこにいるか映る(ようにしたと思う。まだやっていない)。自動化する際使用
+
+## ライセンス
+このアプリで用いられる画像については(ライセンス)[./assets/README.md]を見てください

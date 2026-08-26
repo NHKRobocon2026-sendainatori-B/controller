@@ -432,7 +432,7 @@ class ControllerPage extends State<Controller> {
                         child: Stack(
                           children: [
                             Image.asset(
-                              './assets/map_sample.png',//imgファイルを入れよう
+                              './assets/map.png',//imgファイルを入れよう
                               width: double.infinity,
                               height: double.infinity,
                               fit: BoxFit.contain,

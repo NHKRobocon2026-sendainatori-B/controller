@@ -19,12 +19,35 @@ class Websocketmanager with ChangeNotifier {
     notifyListeners();
   }
 
-  void connect(String ipAddress) {
+  Future<void> connect(String ipAddress) async {
     if(channel != null) return;
-    try{
+    print('[WS CONNECTING NOW]');
+    print('[WS CONNECTING NOW] URI: ws://$ipAddress:9090');
+    try {
       final uri = Uri.parse('ws://$ipAddress:9090');
       channel = IOWebSocketChannel.connect(uri);
-      //最初にsendしてsubscrideしよう
+
+      channel!.stream.listen(
+        (message) {
+          _handleIncomingMessage(message);
+        },
+        onError: (error) {
+          print("[WS ERROR] $error");
+          disconnect();
+        },
+        onDone: () {
+          print("[WS CLOSED] 接続が切断されました");
+          disconnect();
+        },
+      );
+      await channel!.ready.timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          throw TimeoutException("接続がタイムアウトしました。IPアドレスまたはルーター設定を確認してください。");
+        },
+      );
+      print("[WS CONNECTED] 接続成功！");
+
       send({
         'op': 'subscribe',
         'topic': '/amcl_pose',
@@ -38,15 +61,9 @@ class Websocketmanager with ChangeNotifier {
       });
 
       notifyListeners();
-
-      /**
-       * 情報を受け取ったときの動き
-       */
-      channel!.stream.listen((message){
-        _handleIncomingMessage(message);
-      });
-    }catch(e){
-      print("Connect Error!!");
+    } catch (e) {
+      print("[WS EXCEPTION] $e");
+      disconnect();
     }
   }
 

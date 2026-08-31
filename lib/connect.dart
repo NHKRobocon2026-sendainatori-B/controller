@@ -94,7 +94,7 @@ class ConnectionPagestate extends State<ConnectionPage> {
                 FocusScope.of(context).unfocus();
                 await Future.delayed(const Duration(milliseconds: 300));
                 wsManager.setCorner(corner);
-                wsManager.connect(textController.text);
+                await wsManager.connect(textController.text);
                 wsManager.send(
                   {
                     "op" : "publish",

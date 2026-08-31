@@ -64,10 +64,10 @@ class ControllerPage extends State<Controller> {
       "msg" : {
         "header": {},
         "axes": [
-          (slow) ? -gmManager.Lstick_X / 3 : -gmManager.Lstick_X, // axes[0]
-          (slow) ? -gmManager.Lstick_Y / 3 : -gmManager.Lstick_Y, // axes[1]
-          (slow) ? -gmManager.Rstick_X / 3 : -gmManager.Rstick_X, // axes[2]
-          (slow) ? -gmManager.Rstick_Y / 3 : -gmManager.Rstick_Y  // axes[3]
+          (slow) ? gmManager.Lstick_X / 3 : gmManager.Lstick_X, // axes[0]
+          (slow) ? gmManager.Lstick_Y / 3 : gmManager.Lstick_Y, // axes[1]
+          (slow) ? gmManager.Rstick_X / 3 : gmManager.Rstick_X, // axes[2]
+          (slow) ? gmManager.Rstick_Y / 3 : gmManager.Rstick_Y  // axes[3]
         ],
         "buttons": []
       }

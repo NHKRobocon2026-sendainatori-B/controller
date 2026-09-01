@@ -106,9 +106,9 @@ class Websocketmanager with ChangeNotifier {
       //ros2からのデータ
       if (decoded['topic'] == '/setZero_success'){
         //setZeroの設定
-        final bool error = decoded['msg']['data'];
+        final bool success = decoded['msg']['data'];
         if (setZeroResult == null) return;
-        setZeroResult!(error);
+        setZeroResult!(success);
       }
       if (decoded['topic'] == '/amcl_pose') {
         //自己位置

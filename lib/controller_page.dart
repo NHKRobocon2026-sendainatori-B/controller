@@ -390,6 +390,9 @@ class ControllerPage extends State<Controller> {
                       bool? result = await _check_reset(context);
                       if (result == true) {
                         send_reset();
+                        setState(() {
+                          setZeroState = SetZeroState.running;
+                        });
                       }
                     }, 
                     icon: const Icon(Icons.refresh, color: Colors.white),

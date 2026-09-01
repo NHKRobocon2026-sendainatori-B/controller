@@ -228,14 +228,14 @@ class ControllerPage extends State<Controller> {
 
     //始まったときの処理
 
-    WidgetsBinding.instance.addPersistentFrameCallback((_) {
-      final wsManager = context.read<Websocketmanager>();
+    final wsManager = context.read<Websocketmanager>();
 
-      wsManager.setZeroResult = (bool success) {
-        if (mounted) return;
+    wsManager.setZeroResult = (bool success) {
+      if (!mounted) return;
+      setState(() {
         setZeroState = (success) ? SetZeroState.ready : SetZeroState.error;
-      };
-    });
+      });
+    };
   }
 
   @override

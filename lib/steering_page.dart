@@ -11,6 +11,17 @@ class SteeringPage extends CustomPainter {
 
   @override
   void paint(Canvas canvas , Size size) {
+    //枠
+    final rect = Rect.fromLTRB(size.width * 0.2, size.height * 0.2, size.width * 0.8, size.height * 0.8);
+    final rectPaint = Paint()
+      ..color = Colors.grey
+      ..strokeWidth = 5.0
+      ..style = PaintingStyle.stroke;
+    canvas.drawRect(
+      rect, 
+      rectPaint
+    );
+
     //中心点
     final paint = Paint()
       ..color = Colors.pink
@@ -81,7 +92,7 @@ class Unit {
   
     //周りの円
     drawArc(
-      canvas, position, 50, 
+      canvas, position, 40, 
       0, 360, judgeColor,
       isDashed: true, 
       dashSpace: 8.0, 
@@ -89,7 +100,7 @@ class Unit {
     );
 
     //タイヤ
-    drawRotatedRect(canvas, position, 40, 20, (angle + 180), Colors.black45, isFilled: true);
+    drawRotatedRect(canvas, position, 30, 15, (angle + 180), Colors.black45, isFilled: true);
 
     //タイヤと直行する線
     p1 = Offset(position.dx + cos(radian - (pi / 2)) * 30, position.dy + sin(radian - (pi / 2)) * 30);
@@ -102,7 +113,7 @@ class Unit {
     drawArrow(canvas, p1, p2, Colors.blue);
 
     //回転した角度を表す円弧
-    drawArc(canvas, position, 20, 180, angle, judgeColor);
+    drawArc(canvas, position, 35, 180, angle, judgeColor);
   }
 
   Color returnAngleColor(double angleRad) {

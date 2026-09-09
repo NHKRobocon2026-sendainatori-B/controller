@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'websocketmanager.dart';
 import 'gamepadmanager.dart';
 import 'CustomPainter.dart';
+import 'steering_page.dart';
 
 enum SetZeroState { 
   ready, 
@@ -44,6 +45,16 @@ class ControllerPage extends State<Controller> {
   bool _isAuto = true; //オートモード無効
   bool _wasBumperPressed = false;
   bool _isLock = false;
+  bool _wasXPressed = false;
+
+  final PageController _pageController = PageController();
+
+  final List<Unit> units = [
+    Unit(relativePosition: Offset(0.33, 0.33), angle: 0),
+    Unit(relativePosition: Offset(0.66, 0.33), angle: 0),
+    Unit(relativePosition: Offset(0.33, 0.66), angle: 0),
+    Unit(relativePosition: Offset(0.66, 0.66), angle: 0)
+  ];
 
   void _startTimer(){
     _timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
@@ -266,6 +277,7 @@ class ControllerPage extends State<Controller> {
     final bPressed = context.select<Gamepadmanager, bool>((m) => m.B);
     final aPressed = context.select<Gamepadmanager, bool>((m) => m.A);
     final yPressed = context.select<Gamepadmanager, bool>((m) => m.Y);
+    final xPressed = context.select<Gamepadmanager, bool>((m) => m.X);
     final blPressed = context.select<Gamepadmanager, bool>((m) => m.LeftBumper);
     final brPressed = context.select<Gamepadmanager, bool>((m) => m.RightBumper);
     final isRedCorner = context.watch<Websocketmanager>().corner;
@@ -297,6 +309,29 @@ class ControllerPage extends State<Controller> {
       });
     } else if (!yPressed && _wasYPressed) {
       _wasYPressed = false; // ボタンが離されたらリセット
+    }
+
+    if (xPressed && !_wasXPressed) {
+      _wasXPressed = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final int currentPage = _pageController.page?.round() ?? 0;
+        const int totalpage = 2;
+
+        if (currentPage < totalpage - 1) {
+          _pageController.nextPage(
+            duration: const Duration(milliseconds: 300), 
+            curve: Curves.easeInOut
+          );
+        } else {
+          _pageController.animateToPage(
+            0,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        }
+      });
+    } else {
+      _wasXPressed = false;
     }
 
     if (( blPressed || brPressed ) && !_wasBumperPressed){
@@ -434,6 +469,38 @@ class ControllerPage extends State<Controller> {
                         borderRadius: BorderRadius.circular(12),
                         child: Stack(
                           children: [
+                            PageView(
+                              controller: _pageController,
+                              children: [
+                                Center(
+                                  child: SizedBox.expand(
+                                    child: CustomPaint(
+                                      painter: SteeringPage(units: units),
+                                    ),
+                                  ),
+                                ),
+                                Stack(
+                                  children: [
+                                    Image.asset(
+                                      './assets/map.png',//imgファイルを入れよう
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      fit: BoxFit.contain,
+                                    ),
+
+                                    Positioned.fill(
+                                      child: CustomPaint(
+                                        painter: RobotMapPainter(
+                                          robotX: robotX, 
+                                          robotY: robotY
+                                        ),
+                                      )
+                                    )
+                                  ],
+                                )
+                              ],
+                            )
+                            /*
                             Image.asset(
                               './assets/map.png',//imgファイルを入れよう
                               width: double.infinity,
@@ -448,7 +515,7 @@ class ControllerPage extends State<Controller> {
                                   robotY: robotY
                                 ),
                               )
-                            )
+                            )*/
                           ],
                         ),
                       ),

@@ -55,7 +55,7 @@ class SteeringPage extends CustomPainter {
 
 class Unit {
   final Offset relativePosition;
-  final double angle;
+  double angle;
 
   Unit({required this.relativePosition, required this.angle});
 

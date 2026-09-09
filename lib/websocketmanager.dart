@@ -13,6 +13,7 @@ class Websocketmanager with ChangeNotifier {
   double robotX = 0;
   double robotY = 0;
   Function? setZeroResult;
+  Function? setSteeringAngle;
 
   void setCorner(bool isRed) {
     corner = isRed;
@@ -58,6 +59,12 @@ class Websocketmanager with ChangeNotifier {
         'op': 'subscribe',
         'topic': '/setZero_success',
         'type': 'std_msgs/msg/Bool',
+      });
+
+      send({
+        'op': 'subscribe',
+        'topic': '/steeringAngle',
+        'type': 'std_msgs/msg/Int32MultiArray',
       });
 
       notifyListeners();
@@ -115,6 +122,15 @@ class Websocketmanager with ChangeNotifier {
         robotX = decoded['msg']['pose']['pose']['pose']['position']['x'];
         robotY = decoded['msg']['pose']['pose']['pose']['position']['y'];
         notifyListeners();
+      }
+      if (decoded['topic'] == '/steeringAngle') {
+        final rawList = decoded['msg']?['data'];
+        if (rawList is List) {
+          final Int32List list = Int32List.fromList(rawList.cast<int>());
+          if (setSteeringAngle != null) {
+            setSteeringAngle!(list);
+          }
+        }
       }
     }
   }

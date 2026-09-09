@@ -47,6 +47,8 @@ class ControllerPage extends State<Controller> {
   bool _isLock = false;
   bool _wasXPressed = false;
 
+  static var PULSEONE = 1179648;
+
   final PageController _pageController = PageController();
 
   final List<Unit> units = [
@@ -245,6 +247,16 @@ class ControllerPage extends State<Controller> {
       if (!mounted) return;
       setState(() {
         setZeroState = (success) ? SetZeroState.ready : SetZeroState.error;
+      });
+    };
+
+    wsManager.setSteeringAngle = (Int32List list) {
+      if (!mounted) return;
+      setState(() {
+        for (int i = 0; i < list.length; i++) {
+          if (i >= units.length) break;
+          units[i].angle = list[i] / PULSEONE.toDouble();
+        }
       });
     };
   }

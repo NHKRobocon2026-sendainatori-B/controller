@@ -485,7 +485,8 @@ class ControllerPage extends State<Controller> {
                               controller: _pageController,
                               children: [
                                 Center(
-                                  child: SizedBox.expand(
+                                  child: AspectRatio(
+                                    aspectRatio: 1.0,
                                     child: CustomPaint(
                                       painter: SteeringPage(units: units),
                                     ),

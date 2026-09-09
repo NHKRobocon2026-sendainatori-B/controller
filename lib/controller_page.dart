@@ -255,7 +255,7 @@ class ControllerPage extends State<Controller> {
       setState(() {
         for (int i = 0; i < list.length; i++) {
           if (i >= units.length) break;
-          units[i].angle = list[i] / PULSEONE.toDouble();
+          units[i].angle = list[i].toDouble() / PULSEONE.toDouble() * 360.0;
         }
       });
     };

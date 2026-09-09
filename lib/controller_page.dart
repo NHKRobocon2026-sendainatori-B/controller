@@ -205,14 +205,15 @@ class ControllerPage extends State<Controller> {
   Future<void> _requestLock() async {
     final wsManager = context.read<Websocketmanager>();
     if (!wsManager.isConnected) return;
-    if (!_isLock) return;
+    if (_isLock) return;
     _isLock = true;
 
     try {
       final response = await wsManager.sendService(
         service: "/lock_service", 
         type: "example_interfaces/srv/SetBool",
-        args: {"data" : !lock}
+        args: {"data" : !lock},
+        timeout: Duration(seconds: 1)
       );
       if (response['success']  == true){
         setState(() {
@@ -232,6 +233,8 @@ class ControllerPage extends State<Controller> {
         timeOut = true;
       });
     }
+
+    _isLock = false;
   }
 
   @override
@@ -677,30 +680,7 @@ class ControllerPage extends State<Controller> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          try {
-            final response = await context.read<Websocketmanager>().sendService(
-              service: '/lock_service', 
-              type: 'example_interfaces/srv/SetBool', 
-              args: { "data" : !lock },
-              timeout: Duration(seconds: 1)
-            );
-            if (response ['success'] == true) {
-              setState(() {
-                lock = !lock;
-                timeOut = false;
-                lockProblem = false;
-              });
-            } else {
-              lockProblem = true;
-            }
-          } on TimeoutException {
-            setState(() {
-              timeOut = true;
-              lockProblem = true;
-            });
-          }
-        },
+        onPressed: _requestLock,
         backgroundColor: Colors.pinkAccent,
         foregroundColor: Colors.white,
         elevation: 6, 

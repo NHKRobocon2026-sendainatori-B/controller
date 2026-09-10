@@ -50,6 +50,7 @@ class ControllerPage extends State<Controller> {
   static var PULSEONE = 1179648;
 
   final PageController _pageController = PageController();
+  final double imgaspectRatio = 1303 / 1207;
 
   final List<Unit> units = [
     Unit(relativePosition: Offset(0.33, 0.33), angle: 0),
@@ -495,43 +496,31 @@ class ControllerPage extends State<Controller> {
                                     ),
                                   ),
                                 ),
-                                Stack(
-                                  children: [
-                                    Image.asset(
-                                      './assets/map.png',//imgファイルを入れよう
-                                      width: double.infinity,
-                                      height: double.infinity,
-                                      fit: BoxFit.contain,
-                                    ),
-
-                                    Positioned.fill(
-                                      child: CustomPaint(
-                                        painter: RobotMapPainter(
-                                          robotX: robotX, 
-                                          robotY: robotY
+                                Center(
+                                  child: AspectRatio(
+                                    aspectRatio: imgaspectRatio,
+                                    child: Stack(
+                                      children: [
+                                        Image.asset(
+                                          './assets/map.png',
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                          fit: BoxFit.fill,
                                         ),
-                                      )
-                                    )
-                                  ],
+                                        Positioned.fill(
+                                          child: CustomPaint(
+                                            painter: RobotMapPainter(
+                                              robotX: robotX, 
+                                              robotY: robotY
+                                            ),
+                                          )
+                                        )
+                                      ],
+                                    ),
+                                  ),
                                 )
                               ],
                             )
-                            /*
-                            Image.asset(
-                              './assets/map.png',//imgファイルを入れよう
-                              width: double.infinity,
-                              height: double.infinity,
-                              fit: BoxFit.contain,
-                            ),
-
-                            Positioned.fill(
-                              child: CustomPaint(
-                                painter: RobotMapPainter(
-                                  robotX: robotX, 
-                                  robotY: robotY
-                                ),
-                              )
-                            )*/
                           ],
                         ),
                       ),

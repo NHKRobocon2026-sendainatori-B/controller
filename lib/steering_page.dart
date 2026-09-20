@@ -4,10 +4,12 @@ import 'paintHelper.dart';
 
 class SteeringPage extends CustomPainter {
   final List<Unit> units;
+  final ValueNotifier<List<double>> anglesNotifier;
 
   SteeringPage({
-    required this.units
-  });
+    required this.units,
+    required this.anglesNotifier
+  }) : super(repaint: anglesNotifier);
 
   @override
   void paint(Canvas canvas , Size size) {
@@ -45,21 +47,17 @@ class SteeringPage extends CustomPainter {
       strokeWidth: 5.0
     );
 
-    for (final unit in units) {
-      unit.draw(canvas, size);
+    final angles = anglesNotifier.value;
+    for (int i = 0; i < units.length; i++) {
+      if (i < angles.length) {
+        units[i].angle = angles[i];
+      }
+      units[i].draw(canvas, size);
     }
   }
 
   @override
   bool shouldRepaint(covariant SteeringPage oldDelegate) {
-    if (oldDelegate.units.length != units.length) return true;
-
-    for (int i = 0; i < units.length; i++) {
-      if (oldDelegate.units[i].angle != units[i].angle ||
-          oldDelegate.units[i].relativePosition != units[i].relativePosition) {
-        return true;
-      }
-    }
     return false;
   }
 }

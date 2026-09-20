@@ -47,7 +47,7 @@ class ControllerPage extends State<Controller> {
   bool _isLock = false;
   bool _wasXPressed = false;
 
-  static var PULSEONE = 1179648;
+  final PULSEONE = 1179648;
 
   final PageController _pageController = PageController();
   final double imgaspectRatio = 1303 / 1207;
@@ -58,6 +58,8 @@ class ControllerPage extends State<Controller> {
     Unit(relativePosition: Offset(0.33, 0.66), angle: 0),
     Unit(relativePosition: Offset(0.66, 0.66), angle: 0)
   ];
+  final ValueNotifier<List<double>> _steeringAnglesNotifier = 
+      ValueNotifier([0.0, 0.0, 0.0, 0.0]);
 
   void _startTimer(){
     _timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
@@ -256,12 +258,10 @@ class ControllerPage extends State<Controller> {
 
     wsManager.setSteeringAngle = (Int32List list) {
       if (!mounted) return;
-      setState(() {
-        for (int i = 0; i < list.length; i++) {
-          if (i >= units.length) break;
-          units[i].angle = list[i].toDouble() / PULSEONE.toDouble() * 360.0;
-        }
-      });
+      _steeringAnglesNotifier.value = List.generate(
+        list.length,
+        (i) => list[i].toDouble() / PULSEONE.toDouble() * 360.0,
+      );
     };
   }
 
@@ -492,7 +492,7 @@ class ControllerPage extends State<Controller> {
                                   child: AspectRatio(
                                     aspectRatio: 1.0,
                                     child: CustomPaint(
-                                      painter: SteeringPage(units: units),
+                                      painter: SteeringPage(units: units, anglesNotifier: _steeringAnglesNotifier),
                                     ),
                                   ),
                                 ),

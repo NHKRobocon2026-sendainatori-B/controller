@@ -95,14 +95,6 @@ class ConnectionPagestate extends State<ConnectionPage> {
                 await Future.delayed(const Duration(milliseconds: 300));
                 wsManager.setCorner(corner);
                 await wsManager.connect(textController.text);
-                wsManager.send(
-                  {
-                    "op" : "publish",
-                    "topic" : "/start_flag",
-                    "type" : "std_msgs/msg/Empty",
-                    "msg" : {}
-                  }
-                );
                 if (context.mounted) {
                   widget.pageController.animateToPage(
                     1, 

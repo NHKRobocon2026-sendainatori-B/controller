@@ -4,6 +4,7 @@ import 'websocketmanager.dart';
 import 'gamepadmanager.dart';
 import 'package:nhk_robocon_2026_controller/connect.dart';
 import 'package:nhk_robocon_2026_controller/controller_page.dart';
+import 'package:nhk_robocon_2026_controller/check_page.dart';
 
 void main(){
   runApp(
@@ -44,6 +45,7 @@ class HomePage extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         children: [
           ConnectionPage(pageController: controller),
+          Check(pageController: controller,),
           Controller(pageController: controller,),
         ],
         controller: controller,

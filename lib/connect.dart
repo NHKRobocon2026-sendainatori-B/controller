@@ -12,7 +12,7 @@ class ConnectionPage extends StatefulWidget{
 }
 
 class ConnectionPagestate extends State<ConnectionPage> {
-  final TextEditingController textController = TextEditingController(text: "192.168.1.XX");
+  final TextEditingController textController = TextEditingController(text: "192.168.11.19");
 
   bool corner = false; //青ならfalse, 赤ならtrue
 

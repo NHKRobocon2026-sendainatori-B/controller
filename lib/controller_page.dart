@@ -7,6 +7,7 @@ import 'websocketmanager.dart';
 import 'gamepadmanager.dart';
 import 'CustomPainter.dart';
 import 'steering_page.dart';
+import 'shooter_page.dart';
 
 enum SetZeroState { 
   ready, 
@@ -223,6 +224,8 @@ class ControllerPage extends State<Controller> {
           lock = !lock;
           lockProblem = false;
           timeOut = false;
+          shooter = false;
+          auto = false;
         });
       } else {
         setState(() {
@@ -331,7 +334,7 @@ class ControllerPage extends State<Controller> {
       _wasXPressed = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final int currentPage = _pageController.page?.round() ?? 0;
-        const int totalpage = 2;
+        const int totalpage = 3;
 
         if (currentPage < totalpage - 1) {
           _pageController.nextPage(
@@ -496,6 +499,7 @@ class ControllerPage extends State<Controller> {
                                     ),
                                   ),
                                 ),
+                                ShooterPage(),
                                 Center(
                                   child: AspectRatio(
                                     aspectRatio: imgaspectRatio,
@@ -518,7 +522,7 @@ class ControllerPage extends State<Controller> {
                                       ],
                                     ),
                                   ),
-                                )
+                                ),
                               ],
                             )
                           ],

@@ -15,16 +15,16 @@ class ShooterPageState extends State<ShooterPage> with AutomaticKeepAliveClientM
   int first385 = 80;
   final int minfirst385 = 50;
   final int maxfirst385 = 110;
-  int last385 = 140;
-  final int minlast385 = 110;
-  final int maxlast385 = 170;
-  int first735 = 80;
+  int last385 = 150;
+  final int minlast385 = 120;
+  final int maxlast385 = 180;
+  int first735 = 90;
   final int minfirst735 = 60;
-  final int maxfirst735 = 120;
-  int last735 = 140;
-  final int minlast735 = 110;
-  final int maxlast735 = 170;
-  int photointerrupter = 38;
+  final int maxfirst735 = 130;
+  int last735 = 145;
+  final int minlast735 = 115;
+  final int maxlast735 = 175;
+  int photointerrupter = 41;
   int mode = 0; //0:旗、1:机、2:バケツ
 
   bool first385up = false;

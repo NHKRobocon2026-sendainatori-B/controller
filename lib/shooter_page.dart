@@ -190,11 +190,26 @@ class ShooterPageState extends State<ShooterPage> with AutomaticKeepAliveClientM
     _senddata();
   }
 
-  void _changeMode() {
-    setState(() {
-      mode++;
-      if (mode > 2) mode = 0;
-    });
+  Future<void> _changeMode() async {
+    final wsManager = context.read<Websocketmanager>();
+    if (!wsManager.isConnected) return;
+
+    int next = mode + 1;
+    if (next > 2) next = 0;
+
+    final response = await wsManager.sendService(
+      service: "/shootermode", 
+      type: "custom_msg/srv/SelectMode",
+      args: {"mode" : next},
+      timeout: Duration(seconds: 1)
+    );
+
+    if (response['success'] == true) {
+      setState(() {
+        mode = next;
+        photointerrupter = (mode == 1) ? 39 : 41;
+      });
+    }
   }
 
   void _senddata() {
@@ -215,6 +230,8 @@ class ShooterPageState extends State<ShooterPage> with AutomaticKeepAliveClientM
         ]
       }
     };
+
+    wsManager.send(data);
   }
 
   String get _shootermode {

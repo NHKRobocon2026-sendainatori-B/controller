@@ -220,8 +220,12 @@ class ShooterPageState extends State<ShooterPage> with AutomaticKeepAliveClientM
     Map<String, dynamic> data = {
       "op" : "publish",
       "topic" : "/shooter_out",
-      "type" : "",
+      "type" : "std_msgs/msg/UInt8MultiArray",
       "msg" : {
+        "layout": {
+          "dim": [],
+          "data_offset": 0
+        },
         "data" : [
           first385,
           last385,

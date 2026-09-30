@@ -13,16 +13,16 @@ class ShooterPage extends StatefulWidget {
 
 class ShooterPageState extends State<ShooterPage> with AutomaticKeepAliveClientMixin {
   int first385 = 80;
-  final int minfirst385 = 50;
+  final int minfirst385 = 20;
   final int maxfirst385 = 110;
   int last385 = 150;
-  final int minlast385 = 120;
+  final int minlast385 = 40;
   final int maxlast385 = 180;
   int first735 = 90;
-  final int minfirst735 = 60;
+  final int minfirst735 = 30;
   final int maxfirst735 = 130;
   int last735 = 145;
-  final int minlast735 = 115;
+  final int minlast735 = 80;
   final int maxlast735 = 175;
   int photointerrupter = 41;
   int mode = 0; //0:旗、1:机、2:バケツ
@@ -207,7 +207,29 @@ class ShooterPageState extends State<ShooterPage> with AutomaticKeepAliveClientM
     if (response['success'] == true) {
       setState(() {
         mode = next;
-        photointerrupter = (mode == 1) ? 39 : 41;
+        if (mode == 0) {
+          first385 = 80;
+          last385 = 145;
+          first735 = 90;
+          last735 = 150;
+          photointerrupter = 41;
+        } else if (mode == 1) {
+          first385 = 90;
+          last385 = 160;
+          first735 = 90;
+          last735 = 145;
+          photointerrupter = 25;
+        } else if (mode == 2) {
+          first385 = 80;
+          last385 = 145;
+          first735 = 60;
+          last735 = 115;
+          photointerrupter = 41;
+        }
+        _first385controller.text = first385.toString();
+        _last385controller.text = last385.toString();
+        _first735controller.text = first735.toString();
+        _last735controller.text = last735.toString();
         _interruptercontroller.text = photointerrupter.toString();
       });
     }

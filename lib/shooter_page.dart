@@ -208,6 +208,7 @@ class ShooterPageState extends State<ShooterPage> with AutomaticKeepAliveClientM
       setState(() {
         mode = next;
         photointerrupter = (mode == 1) ? 39 : 41;
+        _interruptercontroller.text = photointerrupter.toString();
       });
     }
   }
